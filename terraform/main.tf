@@ -10,3 +10,31 @@ resource "google_compute_subnetwork" "client-pub-sub" {
   network       = google_compute_network.client-vpc.id
   region        = "us-central1"
 }
+
+resource "google_compute_firewall" "ssh-rule" {
+  name    = "ssh-rule"
+  network = google_compute_network.client-vpc.id
+
+  allow {
+    protocol = "icmp"
+  }
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  source_tags = ["ssh"]
+}
+
+resource "google_compute_firewall" "http-rule" {
+  name    = "http-rule"
+  network = google_compute_network.client-vpc.id
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+
+  source_tags = ["http"]
+}
